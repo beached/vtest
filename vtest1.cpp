@@ -152,7 +152,7 @@ static void bench_my_vec_mmap_rsfo( benchmark::State &s ) {
 }
 
 static void make_args( benchmark::internal::Benchmark *b ) {
-	std::size_t ns[] = { 16, 1024, 4096, 1U << 25U, 1U << 27U };
+	std::size_t ns[] = { 16, 1024, 4096, 1048576, 5242880 };
 	for( auto n : ns ) {
 		b->Arg( n );
 	}
