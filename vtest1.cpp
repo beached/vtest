@@ -128,8 +128,8 @@ static void bench_my_vec_rsfo( benchmark::State &s ) {
 			benchmark::DoNotOptimize( v.data( ) );
 			v.resize_for_overwrite( n, []( T *ptr, std::size_t const N ) {
 				auto val = T{0};
-				for( std::size_t i = 0; i < n; ++i ) {
-					v.push_back( val++ );
+				for( std::size_t m = 0; m < N; ++m ) {
+					ptr[m] = T( m );
 				}
 				return N;
 			} );
@@ -148,8 +148,8 @@ static void bench_my_vec_mmap_rsfo( benchmark::State &s ) {
 			benchmark::DoNotOptimize( v.data( ) );
 			v.resize_for_overwrite( n, []( T *ptr, std::size_t const N ) {
 				auto val = T{0};
-				for( std::size_t i = 0; i < n; ++i ) {
-					v.push_back( val++ );
+				for( std::size_t m = 0; m < N; ++m ) {
+					ptr[m] = T( m );
 				}
 				return N;
 			} );
