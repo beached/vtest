@@ -20,9 +20,8 @@ static void bench_std_vec( benchmark::State &s ) {
 			std::vector<T> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
-			auto val = T{0};
 			for( std::size_t i = 0; i < n; ++i ) {
-				v.push_back( val++ );
+				v.push_back( T( i ) );
 			}
 			benchmark::ClobberMemory( );
 		}
@@ -37,9 +36,8 @@ static void bench_std_vec_no_res( benchmark::State &s ) {
 		[=]( ) __attribute__( ( noinline ) ) {
 			std::vector<T> v;
 			benchmark::DoNotOptimize( &v );
-			auto val = T{0};
 			for( std::size_t i = 0; i < n; ++i ) {
-				v.push_back( val++ );
+				v.push_back( T( i ) );
 			}
 			benchmark::ClobberMemory( );
 		}
@@ -55,9 +53,8 @@ static void bench_my_vec( benchmark::State &s ) {
 			daw::Vector<T, std::allocator<T>> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
-			auto val = T{0};
 			for( std::size_t i = 0; i < n; ++i ) {
-				v.push_back( val++ );
+				v.push_back( T( i ) );
 			}
 			benchmark::ClobberMemory( );
 		}
@@ -73,9 +70,8 @@ static void bench_my_vec_no_res( benchmark::State &s ) {
 			daw::Vector<T, std::allocator<T>> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
-			auto val = T{0};
 			for( std::size_t i = 0; i < n; ++i ) {
-				v.push_back( val++ );
+				v.push_back( T( i ) );
 			}
 			benchmark::ClobberMemory( );
 		}
@@ -91,9 +87,8 @@ static void bench_my_vec_mmap( benchmark::State &s ) {
 			daw::Vector<T, daw::MMapAlloc<T>> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
-			auto val = T{0};
 			for( std::size_t i = 0; i < n; ++i ) {
-				v.push_back( val++ );
+				v.push_back( T( i ) );
 			}
 			benchmark::ClobberMemory( );
 		}
@@ -109,9 +104,8 @@ static void bench_my_vec_mmap_no_res( benchmark::State &s ) {
 			daw::Vector<T, daw::MMapAlloc<T>> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
-			auto val = T{0};
 			for( std::size_t i = 0; i < n; ++i ) {
-				v.push_back( val++ );
+				v.push_back( T( i ) );
 			}
 			benchmark::ClobberMemory( );
 		}
@@ -127,7 +121,6 @@ static void bench_my_vec_rsfo( benchmark::State &s ) {
 			daw::Vector<T, std::allocator<T>> v;
 			benchmark::DoNotOptimize( v.data( ) );
 			v.resize_for_overwrite( n, []( T *ptr, std::size_t const N ) {
-				auto val = T{0};
 				for( std::size_t m = 0; m < N; ++m ) {
 					ptr[m] = T( m );
 				}
@@ -147,7 +140,6 @@ static void bench_my_vec_mmap_rsfo( benchmark::State &s ) {
 			daw::Vector<T, daw::MMapAlloc<T>> v;
 			benchmark::DoNotOptimize( v.data( ) );
 			v.resize_for_overwrite( n, []( T *ptr, std::size_t const N ) {
-				auto val = T{0};
 				for( std::size_t m = 0; m < N; ++m ) {
 					ptr[m] = T( m );
 				}
