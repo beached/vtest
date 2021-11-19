@@ -151,11 +151,33 @@ static void bench_my_vec_mmap_rsfo( benchmark::State &s ) {
 	}
 }
 
+template<typename T>
+static void bench_my_vec_stda_rsfo( benchmark::State &s ) {
+	auto n = std::size_t( s.range( 0 ) );
+	for( auto _ : s ) {
+		[=]( ) __attribute__( ( noinline ) ) {
+			daw::Vector<T, std::allocator<T>> v;
+			benchmark::DoNotOptimize( v.data( ) );
+			v.resize_for_overwrite( n, []( T *ptr, std::size_t const N ) {
+				for( std::size_t m = 0; m < N; ++m ) {
+					ptr[m] = T( m );
+				}
+				return N;
+			} );
+			benchmark::ClobberMemory( );
+		}
+		( );
+	}
+}
+
+
+
 static void make_args( benchmark::internal::Benchmark *b ) {
+	b->Arg( 4096 ); /*
 	std::size_t ns[] = { 16, 1024, 4096, 1048576, 5242880 };
 	for( auto n : ns ) {
 		b->Arg( n );
-	}
+	}*/
 }
 
 BENCHMARK_TEMPLATE( bench_std_vec, int )->Apply( make_args );
@@ -166,3 +188,4 @@ BENCHMARK_TEMPLATE( bench_my_vec_no_res, int )->Apply( make_args );
 BENCHMARK_TEMPLATE( bench_my_vec_mmap_no_res, int )->Apply( make_args );
 BENCHMARK_TEMPLATE( bench_my_vec_rsfo, int )->Apply( make_args );
 BENCHMARK_TEMPLATE( bench_my_vec_mmap_rsfo, int )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_my_vec_stda_rsfo, int )->Apply( make_args );
