@@ -143,7 +143,7 @@ static void bench_vec_mmap_resize_and_overwrite( benchmark::State &s ) {
 
 static void make_args( benchmark::internal::Benchmark *b ) {
 //	b->Arg( 4096 ); 
-	std::size_t ns[] = { 16,/* 1024, 4096, 1048576,*/ 5242880 };
+	std::size_t ns[] = { 16, 1024, 4096, 1048576, 5242880 };
 	for( auto n : ns ) {
 		b->Arg( n );
 	}
