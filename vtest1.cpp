@@ -6,6 +6,7 @@
 // Official repository: https://github.com/beached/
 //
 
+#include <daw/vector.h>
 #include <daw/daw_vector.h>
 
 #include <benchmark/benchmark.h>
@@ -13,11 +14,11 @@
 #include <vector>
 
 template<typename T>
-static void bench_std_vec( benchmark::State &s ) {
+static void bench_vec_pb( benchmark::State &s ) {
 	auto n = std::size_t( s.range( 0 ) );
 	for( auto _ : s ) {
 		[=]( ) __attribute__( ( noinline ) ) {
-			std::vector<T> v;
+			daw::vector<T, std::allocator<T>> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
 			for( std::size_t i = 0; i < n; ++i ) {
@@ -30,14 +31,16 @@ static void bench_std_vec( benchmark::State &s ) {
 }
 
 template<typename T>
-static void bench_std_vec_no_res( benchmark::State &s ) {
+static void bench_vec_resize_data_ptr( benchmark::State &s ) {
 	auto n = std::size_t( s.range( 0 ) );
 	for( auto _ : s ) {
 		[=]( ) __attribute__( ( noinline ) ) {
-			std::vector<T> v;
+			daw::vector<T, std::allocator<T>> v;
 			benchmark::DoNotOptimize( &v );
+			v.resize( n );
+			T * ptr = v.data( );
 			for( std::size_t i = 0; i < n; ++i ) {
-				v.push_back( T( i ) );
+				ptr[i] = T( i );	
 			}
 			benchmark::ClobberMemory( );
 		}
@@ -45,29 +48,14 @@ static void bench_std_vec_no_res( benchmark::State &s ) {
 	}
 }
 
-template<typename T>
-static void bench_my_vec( benchmark::State &s ) {
-	auto n = std::size_t( s.range( 0 ) );
-	for( auto _ : s ) {
-		[=]( ) __attribute__( ( noinline ) ) {
-			daw::Vector<T, std::allocator<T>> v;
-			benchmark::DoNotOptimize( &v );
-			v.reserve( n );
-			for( std::size_t i = 0; i < n; ++i ) {
-				v.push_back( T( i ) );
-			}
-			benchmark::ClobberMemory( );
-		}
-		( );
-	}
-}
+
 
 template<typename T>
-static void bench_my_vec_no_res( benchmark::State &s ) {
+static void bench_vec_reserve_pb( benchmark::State &s ) {
 	auto n = std::size_t( s.range( 0 ) );
 	for( auto _ : s ) {
 		[=]( ) __attribute__( ( noinline ) ) {
-			daw::Vector<T, std::allocator<T>> v;
+			daw::vector<T, std::allocator<T>> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
 			for( std::size_t i = 0; i < n; ++i ) {
@@ -80,11 +68,11 @@ static void bench_my_vec_no_res( benchmark::State &s ) {
 }
 
 template<typename T>
-static void bench_my_vec_mmap( benchmark::State &s ) {
+static void bench_vec_mmap( benchmark::State &s ) {
 	auto n = std::size_t( s.range( 0 ) );
 	for( auto _ : s ) {
 		[=]( ) __attribute__( ( noinline ) ) {
-			daw::Vector<T, daw::MMapAlloc<T>> v;
+			daw::vector<T, daw::MMapAlloc<T>> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
 			for( std::size_t i = 0; i < n; ++i ) {
@@ -97,11 +85,11 @@ static void bench_my_vec_mmap( benchmark::State &s ) {
 }
 
 template<typename T>
-static void bench_my_vec_mmap_no_res( benchmark::State &s ) {
+static void bench_vec_mmap_reserve_pb( benchmark::State &s ) {
 	auto n = std::size_t( s.range( 0 ) );
 	for( auto _ : s ) {
 		[=]( ) __attribute__( ( noinline ) ) {
-			daw::Vector<T, daw::MMapAlloc<T>> v;
+			daw::vector<T, daw::MMapAlloc<T>> v;
 			benchmark::DoNotOptimize( &v );
 			v.reserve( n );
 			for( std::size_t i = 0; i < n; ++i ) {
@@ -114,13 +102,13 @@ static void bench_my_vec_mmap_no_res( benchmark::State &s ) {
 }
 
 template<typename T>
-static void bench_my_vec_rsfo( benchmark::State &s ) {
+static void bench_vec_resize_and_overwrite( benchmark::State &s ) {
 	auto n = std::size_t( s.range( 0 ) );
 	for( auto _ : s ) {
 		[=]( ) __attribute__( ( noinline ) ) {
-			daw::Vector<T, std::allocator<T>> v;
+			daw::vector<T, std::allocator<T>> v;
 			benchmark::DoNotOptimize( v.data( ) );
-			v.resize_for_overwrite( n, []( T *ptr, std::size_t const N ) {
+			v.resize_and_overwrite( n, []( T *ptr, std::size_t const N ) {
 				for( std::size_t m = 0; m < N; ++m ) {
 					ptr[m] = T( m );
 				}
@@ -133,13 +121,13 @@ static void bench_my_vec_rsfo( benchmark::State &s ) {
 }
 
 template<typename T>
-static void bench_my_vec_mmap_rsfo( benchmark::State &s ) {
+static void bench_vec_mmap_resize_and_overwrite( benchmark::State &s ) {
 	auto n = std::size_t( s.range( 0 ) );
 	for( auto _ : s ) {
 		[=]( ) __attribute__( ( noinline ) ) {
-			daw::Vector<T, daw::MMapAlloc<T>> v;
+			daw::vector<T, daw::MMapAlloc<T>> v;
 			benchmark::DoNotOptimize( v.data( ) );
-			v.resize_for_overwrite( n, []( T *ptr, std::size_t const N ) {
+			v.resize_and_overwrite( n, []( T *ptr, std::size_t const N ) {
 				for( std::size_t m = 0; m < N; ++m ) {
 					ptr[m] = T( m );
 				}
@@ -154,27 +142,24 @@ static void bench_my_vec_mmap_rsfo( benchmark::State &s ) {
 
 
 static void make_args( benchmark::internal::Benchmark *b ) {
-	b->Arg( 4096 ); /*
-	std::size_t ns[] = { 16, 1024, 4096, 1048576, 5242880 };
+//	b->Arg( 4096 ); 
+	std::size_t ns[] = { 16,/* 1024, 4096, 1048576,*/ 5242880 };
 	for( auto n : ns ) {
 		b->Arg( n );
-	}*/
+	}
 }
 
-BENCHMARK_TEMPLATE( bench_std_vec, int )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_std_vec_no_res, int )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec, int )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec_no_res, int )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec_rsfo, int )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_pb, int )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, int )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, int )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, int )->Apply( make_args );
 
-BENCHMARK_TEMPLATE( bench_std_vec, double )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_std_vec_no_res, double )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec, double )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec_no_res, double )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec_rsfo, double )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, double )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, double )->Apply( make_args );
 
-BENCHMARK_TEMPLATE( bench_std_vec, float )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_std_vec_no_res, float )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec, float )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec_no_res, float )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_my_vec_rsfo, float )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, float )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, float )->Apply( make_args );

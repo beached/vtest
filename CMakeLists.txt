@@ -12,7 +12,7 @@ project("vtest"
         VERSION "0.1.0"
         LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested.")
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard whose features are requested.")
 
 option(DAW_ENABLE_TESTING "Build tests and examples" OFF)
 
