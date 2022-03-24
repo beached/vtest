@@ -141,25 +141,113 @@ static void bench_vec_mmap_resize_and_overwrite( benchmark::State &s ) {
 }
 
 
+template<std::size_t N>
 static void make_args( benchmark::internal::Benchmark *b ) {
-//	b->Arg( 4096 ); 
-	std::size_t ns[] = { 16, 1024, 4096, 1048576, 5242880 };
-	for( auto n : ns ) {
-		b->Arg( n );
-	}
+	b->Arg( N );
 }
 
-BENCHMARK_TEMPLATE( bench_vec_pb, int )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, int )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_reserve_pb, int )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, int )->Apply( make_args );
+// int
+BENCHMARK_TEMPLATE( bench_vec_pb, int )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, int )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, int )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, int )->Apply( make_args<16> );
 
-BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_reserve_pb, double )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, double )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_pb, int )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, int )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, int )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, int )->Apply( make_args<1024> );
 
-BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_reserve_pb, float )->Apply( make_args );
-BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, float )->Apply( make_args );
+BENCHMARK_TEMPLATE( bench_vec_pb, int )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, int )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, int )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, int )->Apply( make_args<4096> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, int )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, int )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, int )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, int )->Apply( make_args<16384> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, int )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, int )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, int )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, int )->Apply( make_args<5242880> );
+
+// long long
+BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, long long )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, long long )->Apply( make_args<16> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, long long )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, long long )->Apply( make_args<1024> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, long long )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, long long )->Apply( make_args<4096> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, long long )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, long long )->Apply( make_args<16384> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, long long )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, long long )->Apply( make_args<5242880> );
+
+// float
+BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, float )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, float )->Apply( make_args<16> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, float )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, float )->Apply( make_args<1024> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, float )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, float )->Apply( make_args<4096> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, float )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, float )->Apply( make_args<16384> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, float )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, float )->Apply( make_args<5242880> );
+
+// double
+BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, double )->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, double )->Apply( make_args<16> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, double )->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, double )->Apply( make_args<1024> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, double )->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, double )->Apply( make_args<4096> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, double )->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, double )->Apply( make_args<16384> );
+
+BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_reserve_pb, double )->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite, double )->Apply( make_args<5242880> );
+
+
