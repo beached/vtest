@@ -188,11 +188,12 @@ static void bench_realloc_from_1( benchmark::State &s ) {
 			if( not v ) {
 				std::abort( );
 			}
-			v[0] = 1;
+			v[0] = 0;
 			std::size_t cur_size = 2;
 			auto last_size = 1;
 			while( cur_size < n ) {
-				v = static_cast<T*>( realloc( v, sizeof( T ) * cur_size ) );
+				auto alloc_size = cur_size * sizeof( T );
+				v = static_cast<T*>( realloc( v, alloc_size ) );
 				if( not v ) {
 					std::abort( );
 				}
@@ -202,6 +203,8 @@ static void bench_realloc_from_1( benchmark::State &s ) {
 				last_size = cur_size;
 				cur_size = (cur_size * 3)/2;
 			}
+			auto alloc_size = n * sizeof( T );
+			v = static_cast<T*>( realloc( v, alloc_size ) );
 			for( size_t m=last_size; m<n; ++m ) {
 				v[m] = m;
 			}
@@ -362,6 +365,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, long long )
   ->Apply( make_args<16> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, long long )
   ->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, long )->Apply( make_args<16> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<1024> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )
@@ -373,6 +377,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, long long )
   ->Apply( make_args<1024> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, long long )
   ->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, long )->Apply( make_args<1024> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<4096> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )
@@ -384,6 +389,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, long long )
   ->Apply( make_args<4096> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, long long )
   ->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, long )->Apply( make_args<4096> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<16384> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )
@@ -396,6 +402,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, long long )
   ->Apply( make_args<16384> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, long long )
   ->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, long )->Apply( make_args<16384> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, long long )->Apply( make_args<5242880> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, long long )
@@ -408,6 +415,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, long long )
   ->Apply( make_args<5242880> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, long long )
   ->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, long )->Apply( make_args<5242880> );
 
 // float
 BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<16> );
@@ -419,6 +427,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, float )
   ->Apply( make_args<16> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, float )
   ->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, float )->Apply( make_args<16> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<1024> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )
@@ -430,6 +439,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, float )
   ->Apply( make_args<1024> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, float )
   ->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, float )->Apply( make_args<1024> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<4096> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )
@@ -441,6 +451,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, float )
   ->Apply( make_args<4096> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, float )
   ->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, float )->Apply( make_args<4096> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<16384> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )
@@ -452,6 +463,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, float )
   ->Apply( make_args<16384> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, float )
   ->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, float )->Apply( make_args<16384> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, float )->Apply( make_args<5242880> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, float )
@@ -463,6 +475,8 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, float )
   ->Apply( make_args<5242880> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, float )
   ->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, float )->Apply( make_args<5242880> );
+
 
 // double
 BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<16> );
@@ -474,6 +488,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, double )
   ->Apply( make_args<16> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, double )
   ->Apply( make_args<16> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, double )->Apply( make_args<16> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<1024> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )
@@ -485,6 +500,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, double )
   ->Apply( make_args<1024> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, double )
   ->Apply( make_args<1024> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, double )->Apply( make_args<1024> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<4096> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )
@@ -496,6 +512,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, double )
   ->Apply( make_args<4096> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, double )
   ->Apply( make_args<4096> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, double )->Apply( make_args<4096> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<16384> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )
@@ -507,6 +524,7 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, double )
   ->Apply( make_args<16384> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, double )
   ->Apply( make_args<16384> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, double )->Apply( make_args<16384> );
 
 BENCHMARK_TEMPLATE( bench_vec_pb, double )->Apply( make_args<5242880> );
 BENCHMARK_TEMPLATE( bench_vec_resize_data_ptr, double )
@@ -518,3 +536,4 @@ BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_assign, double )
   ->Apply( make_args<5242880> );
 BENCHMARK_TEMPLATE( bench_vec_resize_and_overwrite_alloc, double )
   ->Apply( make_args<5242880> );
+BENCHMARK_TEMPLATE( bench_realloc_from_1, double )->Apply( make_args<5242880> );
